@@ -31,15 +31,10 @@ jobs:
         run: |
           cp -r applications/luci-app-diskman2 openwrt-sdk-*/package/
 
-      - name: Create .config for non-interactive build
+      - name: Build package (non-interactive)
         run: |
           cd openwrt-sdk-*/ || exit 1
-          printf 'CONFIG_SHELL=/bin/false\nCONFIG_HAS_SKIP_VALIDATION=1\nCONFIG_IMAGEOPT=y\nCONFIG_VERSIONOPT=y\nCONFIG_PACKAGE_luci-app-diskman2=y\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_ntfs_3g_utils=y\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_btrfs_progs=y\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_lsblk=y\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_mdadm=n\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_kmod_md_raid456=n\nCONFIG_PACKAGE_luci-app-diskman2_INCLUDE_kmod_md_linears=n\n' > .config
-          cat .config
-
-      - name: Build package
-        run: |
-          cd openwrt-sdk-*/ || exit 1
+          make defconfig
           make package/luci-app-diskman2/compile V=sc
           make package/index
 
